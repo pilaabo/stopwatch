@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
+import 'stopwatch.dart' as stopwatch;
 
 void main() {
-  runApp(const MainApp());
+  runApp(const StopwatchApp());
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+class StopwatchApp extends StatelessWidget {
+  const StopwatchApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
+      home: stopwatch.Stopwatch(),
     );
   }
 }
