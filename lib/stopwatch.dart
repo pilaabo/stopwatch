@@ -14,6 +14,8 @@ class _StopwatchState extends State<Stopwatch> {
   late Timer timer;
   bool isTicking = false;
   final laps = <int>[];
+  final itemHeight = 60.0;
+  final scrollController = ScrollController();
 
   void _onTick(Timer timer) {
     setState(() {
@@ -26,6 +28,11 @@ class _StopwatchState extends State<Stopwatch> {
       laps.add(milliseconds);
       milliseconds = 0;
     });
+    scrollController.animateTo(
+      itemHeight * laps.length,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeIn,
+    );
   }
 
   String _secondsText(int milliseconds) {
@@ -123,15 +130,27 @@ class _StopwatchState extends State<Stopwatch> {
   }
 
   Widget _buildLapDisplay() {
-    return ListView(
-      children: [
-        for (final (lap, milliseconds) in laps.indexed)
-          ListTile(
+    return Scrollbar(
+      thumbVisibility: true,
+      child: ListView.builder(
+        controller: scrollController,
+        itemExtent: itemHeight,
+        itemCount: laps.length,
+        itemBuilder: (context, index) {
+          final milliseconds = laps[index];
+          return ListTile(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 50),
             title: Text(
-              'Lap ${lap + 1}: ${_secondsText(milliseconds)}',
+              'Lap ${index + 1}',
+              style: const TextStyle(fontSize: 20),
             ),
-          )
-      ],
+            trailing: Text(
+              _secondsText(milliseconds),
+              style: const TextStyle(fontSize: 20),
+            ),
+          );
+        },
+      ),
     );
   }
 
